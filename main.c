@@ -106,19 +106,20 @@ Areas CheckSquares(Square square, int depth, int maxDepth) {
 
     // checks bottom right and top left square, both points of these squares could be either inside or outside the quarter circle so have to be fully checked
     for (int i = 1; i < 3; i++) {
-
+        double p1_psudo_mag = psudoMagnitude(&(smallerSquares[i].p1));
+        double p2_psudo_mag = psudoMagnitude(&(smallerSquares[i].p2));
 
         // using psudo magnitude, if magnitude is < 1 then magnitude ^2 < 1, using pythagoras magnitude = sqrt(a^2 + b^2) the square and sqrt cancel out reducing the number of calculations
-        if (psudoMagnitude(&(smallerSquares[i].p2)) < 1) {
+        if (p2_psudo_mag < 1) {
 
             areas.internal += squareArea(smallerSquares[i]);
         }
-        if (psudoMagnitude(&(smallerSquares[i].p2)) > 1 && psudoMagnitude(&(smallerSquares[i].p1)) < 1) {
+        if (p2_psudo_mag > 1 && p1_psudo_mag < 1) {
             Areas recusArea = CheckSquares(smallerSquares[i], depth, maxDepth);
             areas.internal += recusArea.internal;
             areas.external += recusArea.external;
         }
-        if (psudoMagnitude(&(smallerSquares[i].p1)) > 1) {
+        if (p1_psudo_mag > 1) {
             areas.external += squareArea(smallerSquares[i]);
         }
     }
@@ -150,7 +151,7 @@ double PI(int maxDepth) {
 }
 
 int main() {
-    int max_depth = 20;
+    int max_depth = 26;
 
     double PiEstimate = PI(max_depth);
     printf("PI = %.10f\n", PiEstimate);
