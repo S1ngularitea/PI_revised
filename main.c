@@ -62,13 +62,17 @@ double psudoMagnitude(Position* vector)  {
 Areas CheckSquares(Square square, int depth, int maxDepth) {
     Areas areas = {0.0f, 0.0f};
 
+    // check is max depth has been reached
     if (depth >= maxDepth) {
         areas.external += squareArea(square);
         return areas;
     }
     depth ++;
+
+    // create an array to store each subsquare
     Square smallerSquares[4];
 
+    // Divides current square into quarters
     GenerateSmallerSquares(square, smallerSquares);
 
 
@@ -91,6 +95,7 @@ Areas CheckSquares(Square square, int depth, int maxDepth) {
 
    // Code below is the same as the code above but optimised to reduce then number of redundant comparisons
 
+    // checks bottom left square, it is known that the bottom left point lies within the circle so it doesn't have to be checked
     if(psudoMagnitude(&(smallerSquares[0].p2)) < 1)
         areas.internal += squareArea(smallerSquares[0]);
     else {
@@ -99,6 +104,7 @@ Areas CheckSquares(Square square, int depth, int maxDepth) {
         areas.external += recurseArea.external;
     }
 
+    // checks bottom right and top left square, both points of these squares could be either inside or outside the quarter circle so have to be fully checked
     for (int i = 1; i < 3; i++) {
 
 
@@ -117,6 +123,7 @@ Areas CheckSquares(Square square, int depth, int maxDepth) {
         }
     }
 
+    // check is top right square lies within the quarter circle, it is known that the top point lies ouside of the circle so it doesn't have to be checked
     if (psudoMagnitude(&(smallerSquares[3].p1)) > 1) {
         areas.external += squareArea(smallerSquares[3]);
     } else {
@@ -125,15 +132,15 @@ Areas CheckSquares(Square square, int depth, int maxDepth) {
         areas.external += recusArea.external;
     }
 
-
-
     return areas;
 }
 
 double PI(int maxDepth) {
 
+    // create start 1x1 square
     Square startSquare = generateNewSquare(newPoint(0, 0), newPoint(1, 1));
 
+    // calculate area within quarter circle and outside of quarter circle
     Areas areas = CheckSquares(startSquare, 0, maxDepth);
 
     double total = areas.external+areas.internal;
@@ -143,7 +150,7 @@ double PI(int maxDepth) {
 }
 
 int main() {
-    int max_depth = 30;
+    int max_depth = 20;
 
     double PiEstimate = PI(max_depth);
     printf("PI = %.10f\n", PiEstimate);
