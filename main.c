@@ -113,15 +113,16 @@ Areas CheckSquares(Square square, int depth, int maxDepth) {
         if (p2_psudo_mag < 1) {
 
             areas.internal += squareArea(smallerSquares[i]);
-        }
-        if (p2_psudo_mag > 1 && p1_psudo_mag < 1) {
-            Areas recusArea = CheckSquares(smallerSquares[i], depth, maxDepth);
-            areas.internal += recusArea.internal;
-            areas.external += recusArea.external;
+            continue; // jump to next i value
         }
         if (p1_psudo_mag > 1) {
             areas.external += squareArea(smallerSquares[i]);
+            continue; // jump to next i value
         }
+
+        Areas recusArea = CheckSquares(smallerSquares[i], depth, maxDepth);
+        areas.internal += recusArea.internal;
+        areas.external += recusArea.external;
     }
 
     // check is top right square lies within the quarter circle, it is known that the top point lies ouside of the circle so it doesn't have to be checked
@@ -151,10 +152,10 @@ double PI(int maxDepth) {
 }
 
 int main() {
-    int max_depth = 26;
+    int max_depth = 20;
 
     double PiEstimate = PI(max_depth);
-    printf("PI = %.10f\n", PiEstimate);
+    printf("PI = %.15f\n", PiEstimate);
     
     return 0;
 }
